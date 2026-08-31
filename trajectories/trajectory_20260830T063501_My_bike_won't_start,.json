@@ -1,0 +1,62 @@
+[
+  {
+    "step": "receive_query",
+    "query": "My bike won't start, need a mechanic who does doorstep service, budget under 1000.",
+    "timestamp": "2026-08-30T06:34:57.249590+00:00",
+    "mode": "real"
+  },
+  {
+    "step": "parse_query",
+    "mode": "real",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "system_prompt": "You are a requirement-extraction module for a producer-matching agent.\nGiven a consumer's plain-language request, extract structured JSON with these fields:\n- category: one of [\"tailor\", \"farmer\", \"developer\", \"mechanic\", \"tutor\"]\n- budget_min: number or null\n- budget_max: number or null\n- need_summary: short phrase describing what they actually need\n- quality_bar: one of [\"budget\", \"moderate\", \"premium\"] based on language used (e.g. \"designer\",\n  \"cheapest\", \"quality matters most\")\nRespond with ONLY the JSON object, no other text.",
+    "user_message": "My bike won't start, need a mechanic who does doorstep service, budget under 1000.",
+    "response": "{\n  \"category\": \"mechanic\",\n  \"budget_min\": null,\n  \"budget_max\": 1000,\n  \"need_summary\": \"doorstep bike repair\",\n  \"quality_bar\": \"budget\"\n}"
+  },
+  {
+    "step": "retrieve_candidates",
+    "category": "mechanic",
+    "candidate_count": 3
+  },
+  {
+    "step": "rank_candidates",
+    "mode": "real",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "system_prompt": "You are a matching-reasoning module. You will be given a structured consumer\nrequirement and a list of candidate producers (as JSON). Select up to 3 producers that best fit,\nranked best first. For each, give a one-sentence reason that ONLY uses facts present in that\nproducer's record (price range, description, tags, quantity_or_complexity). Do not invent details.\n\nWeigh these, in order of importance:\n1. Specific requirements in need_summary (e.g. \"specialist\", \"premium\", \"quick\", a named skill\n   or material) \u2014 prefer producers whose description/tags explicitly match that specific need\n   over producers that only match the general category.\n2. Budget fit \u2014 if budget_max is given, prefer producers whose price range fits within it, and\n   explicitly exclude producers that are clearly outside the stated budget.\n3. Quality tier \u2014 match quality_bar to producers whose tags/description reflect that tier.\n\nIf the consumer names a specific type of specialist or a specific need that only some\nsame-category producers actually offer, do NOT default to the most general/broad producer just\nbecause it also technically fits the category.\n\nRespond with ONLY a JSON list like:\n[{\"id\": \"P001\", \"reason\": \"...\"}]",
+    "user_message": "{\"requirement\": {\"category\": \"mechanic\", \"budget_min\": null, \"budget_max\": 1000, \"need_summary\": \"doorstep bike repair\", \"quality_bar\": \"budget\"}, \"candidates\": [{\"id\": \"P010\", \"name\": \"Venu Auto Works\", \"category\": \"mechanic\", \"location\": \"BTM Layout, Bengaluru\", \"phone\": \"9800000010\", \"price_min\": 300, \"price_max\": 5000, \"quantity_or_complexity\": \"two-wheeler and small car repairs\", \"description\": \"General two-wheeler and hatchback mechanic, doorstep service available.\", \"tags\": [\"bike repair\", \"car repair\", \"doorstep service\"]}, {\"id\": \"P011\", \"name\": \"Iqbal Tyre & Battery\", \"category\": \"mechanic\", \"location\": \"Shivajinagar, Bengaluru\", \"phone\": \"9800000011\", \"price_min\": 200, \"price_max\": 3000, \"quantity_or_complexity\": \"tyres, batteries, minor repairs\", \"description\": \"Specializes in tyre replacement and battery service for cars and bikes.\", \"tags\": [\"tyre\", \"battery\", \"budget\"]}, {\"id\": \"P016\", \"name\": \"Zoya Electronics Repair\", \"category\": \"mechanic\", \"location\": \"HSR Layout, Bengaluru\", \"phone\": \"9800000016\", \"price_min\": 150, \"price_max\": 2500, \"quantity_or_complexity\": \"mobile and laptop repair\", \"description\": \"Repairs phones and laptops, not automotive.\", \"tags\": [\"mobile repair\", \"laptop repair\", \"electronics\"]}]}",
+    "response": "[{\"id\": \"P010\", \"reason\": \"Offers doorstep bike repair with tags \\\"bike repair\\\" and \\\"doorstep service\\\" and price range 300\u20115000, fitting within the consumer's budget ceiling.\"}]"
+  },
+  {
+    "step": "verify_matches",
+    "checked": 1,
+    "passed": 1,
+    "issues": []
+  },
+  {
+    "step": "final_result",
+    "result": {
+      "category_detected": "mechanic",
+      "parsed_requirement": {
+        "category": "mechanic",
+        "budget_min": null,
+        "budget_max": 1000,
+        "need_summary": "doorstep bike repair",
+        "quality_bar": "budget"
+      },
+      "results": [
+        {
+          "id": "P010",
+          "name": "Venu Auto Works",
+          "location": "BTM Layout, Bengaluru",
+          "phone": "9800000010",
+          "price_min": 300,
+          "price_max": 5000,
+          "reason": "Offers doorstep bike repair with tags \"bike repair\" and \"doorstep service\" and price range 300\u20115000, fitting within the consumer's budget ceiling."
+        }
+      ],
+      "issues": []
+    }
+  }
+]

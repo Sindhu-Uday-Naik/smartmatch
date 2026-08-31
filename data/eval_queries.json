@@ -1,0 +1,106 @@
+[
+  {
+    "id": "Q1",
+    "query": "I want a lehenga that looks like a designer one I saw on Instagram but I can't afford a boutique. Budget around 3000 rupees.",
+    "expected_category": "tailor",
+    "expected_producer_ids": [
+      "P001",
+      "P018"
+    ],
+    "budget_max": 3000,
+    "notes": "Should NOT match Fatima Designer Studio (P003) - too expensive for stated budget."
+  },
+  {
+    "id": "Q2",
+    "query": "Need 2 kg of flowers, ideally marigold or rose, for a festival tomorrow. Want the cheapest fair price, willing to go direct to a farm.",
+    "expected_category": "farmer",
+    "expected_producer_ids": [
+      "P004",
+      "P015",
+      "P005"
+    ],
+    "notes": "Should NOT match Anjali Organic Vegetables (P006) - no flowers.",
+    "budget_max": null
+  },
+  {
+    "id": "Q3",
+    "query": "I'm a final year engineering student and need someone affordable to help build my major project, a simple web app, I'm not confident in coding.",
+    "expected_category": "developer",
+    "expected_producer_ids": [
+      "P007",
+      "P009"
+    ],
+    "notes": "Should NOT match Priya Fullstack Solutions (P008) - priced for production clients, not students.",
+    "budget_max": null
+  },
+  {
+    "id": "Q4",
+    "query": "My major project needs some machine learning component and I have a slightly higher budget, around 15000 rupees.",
+    "expected_category": "developer",
+    "expected_producer_ids": [
+      "P017"
+    ],
+    "notes": "Tests whether agent distinguishes ML-specific need from generic web app need.",
+    "budget_max": 15000
+  },
+  {
+    "id": "Q5",
+    "query": "My bike won't start, need a mechanic who does doorstep service, budget under 1000.",
+    "expected_category": "mechanic",
+    "expected_producer_ids": [
+      "P010"
+    ],
+    "notes": "Should NOT match Zoya Electronics Repair (P016) - not automotive.",
+    "budget_max": 1000
+  },
+  {
+    "id": "Q6",
+    "query": "Looking for a budget blouse stitched quickly, nothing fancy, just a plain blouse in 3 days.",
+    "expected_category": "tailor",
+    "expected_producer_ids": [
+      "P002"
+    ],
+    "notes": "Should NOT match P001/P003 (designer/bridal, overkill and overpriced) or P014 (has embroidery upcharge).",
+    "budget_max": null
+  },
+  {
+    "id": "Q7",
+    "query": "I need my car's tyres and battery replaced, want a specialist not a general mechanic.",
+    "expected_category": "mechanic",
+    "expected_producer_ids": [
+      "P011"
+    ],
+    "notes": "Tests specificity: tyre/battery specialist vs general mechanic P010.",
+    "budget_max": null
+  },
+  {
+    "id": "Q8",
+    "query": "Want a home tutor for my 8th grade daughter, maths and science, budget under 1500 a month.",
+    "expected_category": "tutor",
+    "expected_producer_ids": [
+      "P012"
+    ],
+    "notes": "Should NOT match Karthik Python Mentor (P013) - college-level, wrong audience.",
+    "budget_max": 1500
+  },
+  {
+    "id": "Q9",
+    "query": "I want a bridal outfit with heavy zari and sequin work, budget is flexible, quality matters most.",
+    "expected_category": "tailor",
+    "expected_producer_ids": [
+      "P003"
+    ],
+    "notes": "Tests whether agent correctly matches premium need to premium producer instead of defaulting to cheapest.",
+    "budget_max": null
+  },
+  {
+    "id": "Q10",
+    "query": "Need someone to mentor me in Python and DSA for placement prep, I'm in college.",
+    "expected_category": "tutor",
+    "expected_producer_ids": [
+      "P013"
+    ],
+    "notes": "Should NOT match Meena Home Tutoring (P012) - wrong level/subject.",
+    "budget_max": null
+  }
+]

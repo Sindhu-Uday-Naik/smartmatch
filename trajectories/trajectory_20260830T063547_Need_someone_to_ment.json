@@ -1,0 +1,62 @@
+[
+  {
+    "step": "receive_query",
+    "query": "Need someone to mentor me in Python and DSA for placement prep, I'm in college.",
+    "timestamp": "2026-08-30T06:35:37.952932+00:00",
+    "mode": "real"
+  },
+  {
+    "step": "parse_query",
+    "mode": "real",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "system_prompt": "You are a requirement-extraction module for a producer-matching agent.\nGiven a consumer's plain-language request, extract structured JSON with these fields:\n- category: one of [\"tailor\", \"farmer\", \"developer\", \"mechanic\", \"tutor\"]\n- budget_min: number or null\n- budget_max: number or null\n- need_summary: short phrase describing what they actually need\n- quality_bar: one of [\"budget\", \"moderate\", \"premium\"] based on language used (e.g. \"designer\",\n  \"cheapest\", \"quality matters most\")\nRespond with ONLY the JSON object, no other text.",
+    "user_message": "Need someone to mentor me in Python and DSA for placement prep, I'm in college.",
+    "response": "{\n  \"category\": \"tutor\",\n  \"budget_min\": null,\n  \"budget_max\": null,\n  \"need_summary\": \"Python and DSA mentorship for placement preparation\",\n  \"quality_bar\": \"moderate\"\n}"
+  },
+  {
+    "step": "retrieve_candidates",
+    "category": "tutor",
+    "candidate_count": 2
+  },
+  {
+    "step": "rank_candidates",
+    "mode": "real",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "system_prompt": "You are a matching-reasoning module. You will be given a structured consumer\nrequirement and a list of candidate producers (as JSON). Select up to 3 producers that best fit,\nranked best first. For each, give a one-sentence reason that ONLY uses facts present in that\nproducer's record (price range, description, tags, quantity_or_complexity). Do not invent details.\n\nWeigh these, in order of importance:\n1. Specific requirements in need_summary (e.g. \"specialist\", \"premium\", \"quick\", a named skill\n   or material) \u2014 prefer producers whose description/tags explicitly match that specific need\n   over producers that only match the general category.\n2. Budget fit \u2014 if budget_max is given, prefer producers whose price range fits within it, and\n   explicitly exclude producers that are clearly outside the stated budget.\n3. Quality tier \u2014 match quality_bar to producers whose tags/description reflect that tier.\n\nIf the consumer names a specific type of specialist or a specific need that only some\nsame-category producers actually offer, do NOT default to the most general/broad producer just\nbecause it also technically fits the category.\n\nRespond with ONLY a JSON list like:\n[{\"id\": \"P001\", \"reason\": \"...\"}]",
+    "user_message": "{\"requirement\": {\"category\": \"tutor\", \"budget_min\": null, \"budget_max\": null, \"need_summary\": \"Python and DSA mentorship for placement preparation\", \"quality_bar\": \"moderate\"}, \"candidates\": [{\"id\": \"P012\", \"name\": \"Meena Home Tutoring\", \"category\": \"tutor\", \"location\": \"Indiranagar, Bengaluru\", \"phone\": \"9800000012\", \"price_min\": 500, \"price_max\": 2000, \"quantity_or_complexity\": \"school-level maths and science, per month\", \"description\": \"Home tutor for school students, maths and science, budget-friendly group batches available.\", \"tags\": [\"school tuition\", \"maths\", \"science\", \"budget\"]}, {\"id\": \"P013\", \"name\": \"Karthik Python Mentor\", \"category\": \"tutor\", \"location\": \"Remote\", \"phone\": \"9800000013\", \"price_min\": 1000, \"price_max\": 4000, \"quantity_or_complexity\": \"college-level Python/DSA, per month\", \"description\": \"Mentors college students in Python and data structures for placement prep, also helps debug student mini-projects.\", \"tags\": [\"python\", \"dsa\", \"placement\", \"mentoring\", \"student project help\"]}]}",
+    "response": "[{\"id\": \"P013\", \"reason\": \"Mentors college students in Python and data structures for placement prep, matching the requested Python and DSA mentorship.\"}]"
+  },
+  {
+    "step": "verify_matches",
+    "checked": 1,
+    "passed": 1,
+    "issues": []
+  },
+  {
+    "step": "final_result",
+    "result": {
+      "category_detected": "tutor",
+      "parsed_requirement": {
+        "category": "tutor",
+        "budget_min": null,
+        "budget_max": null,
+        "need_summary": "Python and DSA mentorship for placement preparation",
+        "quality_bar": "moderate"
+      },
+      "results": [
+        {
+          "id": "P013",
+          "name": "Karthik Python Mentor",
+          "location": "Remote",
+          "phone": "9800000013",
+          "price_min": 1000,
+          "price_max": 4000,
+          "reason": "Mentors college students in Python and data structures for placement prep, matching the requested Python and DSA mentorship."
+        }
+      ],
+      "issues": []
+    }
+  }
+]

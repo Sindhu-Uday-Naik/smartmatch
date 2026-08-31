@@ -1,0 +1,80 @@
+[
+  {
+    "step": "receive_query",
+    "query": "Need 2 kg of flowers, ideally marigold or rose, for a festival tomorrow. Want the cheapest fair price, willing to go direct to a farm.",
+    "timestamp": "2026-08-30T06:34:42.471528+00:00",
+    "mode": "real"
+  },
+  {
+    "step": "parse_query",
+    "mode": "real",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "system_prompt": "You are a requirement-extraction module for a producer-matching agent.\nGiven a consumer's plain-language request, extract structured JSON with these fields:\n- category: one of [\"tailor\", \"farmer\", \"developer\", \"mechanic\", \"tutor\"]\n- budget_min: number or null\n- budget_max: number or null\n- need_summary: short phrase describing what they actually need\n- quality_bar: one of [\"budget\", \"moderate\", \"premium\"] based on language used (e.g. \"designer\",\n  \"cheapest\", \"quality matters most\")\nRespond with ONLY the JSON object, no other text.",
+    "user_message": "Need 2 kg of flowers, ideally marigold or rose, for a festival tomorrow. Want the cheapest fair price, willing to go direct to a farm.",
+    "response": "{\n  \"category\": \"farmer\",\n  \"budget_min\": null,\n  \"budget_max\": null,\n  \"need_summary\": \"2 kg of flowers (marigold or rose) for a festival tomorrow\",\n  \"quality_bar\": \"budget\"\n}"
+  },
+  {
+    "step": "retrieve_candidates",
+    "category": "farmer",
+    "candidate_count": 4
+  },
+  {
+    "step": "rank_candidates",
+    "mode": "real",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "system_prompt": "You are a matching-reasoning module. You will be given a structured consumer\nrequirement and a list of candidate producers (as JSON). Select up to 3 producers that best fit,\nranked best first. For each, give a one-sentence reason that ONLY uses facts present in that\nproducer's record (price range, description, tags, quantity_or_complexity). Do not invent details.\n\nWeigh these, in order of importance:\n1. Specific requirements in need_summary (e.g. \"specialist\", \"premium\", \"quick\", a named skill\n   or material) \u2014 prefer producers whose description/tags explicitly match that specific need\n   over producers that only match the general category.\n2. Budget fit \u2014 if budget_max is given, prefer producers whose price range fits within it, and\n   explicitly exclude producers that are clearly outside the stated budget.\n3. Quality tier \u2014 match quality_bar to producers whose tags/description reflect that tier.\n\nIf the consumer names a specific type of specialist or a specific need that only some\nsame-category producers actually offer, do NOT default to the most general/broad producer just\nbecause it also technically fits the category.\n\nRespond with ONLY a JSON list like:\n[{\"id\": \"P001\", \"reason\": \"...\"}]",
+    "user_message": "{\"requirement\": {\"category\": \"farmer\", \"budget_min\": null, \"budget_max\": null, \"need_summary\": \"2 kg of flowers (marigold or rose) for a festival tomorrow\", \"quality_bar\": \"budget\"}, \"candidates\": [{\"id\": \"P004\", \"name\": \"Suresh Kumar Farms\", \"category\": \"farmer\", \"location\": \"Doddaballapur Road, Bengaluru Rural\", \"phone\": \"9800000004\", \"price_min\": 40, \"price_max\": 90, \"quantity_or_complexity\": \"up to 20 kg/day\", \"description\": \"Grows marigold and jasmine, sells in bulk directly, no middleman markup. Best rates when bought a day in advance.\", \"tags\": [\"marigold\", \"jasmine\", \"flowers\", \"bulk\", \"festival\"]}, {\"id\": \"P005\", \"name\": \"Green Valley Flower Farm\", \"category\": \"farmer\", \"location\": \"Hoskote, Bengaluru Rural\", \"phone\": \"9800000005\", \"price_min\": 60, \"price_max\": 120, \"quantity_or_complexity\": \"up to 15 kg/day\", \"description\": \"Rose and chrysanthemum grower, direct farm pickup or local delivery, price rises sharply during festival week if not booked early.\", \"tags\": [\"rose\", \"chrysanthemum\", \"flowers\", \"festival\", \"delivery\"]}, {\"id\": \"P006\", \"name\": \"Anjali Organic Vegetables\", \"category\": \"farmer\", \"location\": \"Nelamangala, Bengaluru Rural\", \"phone\": \"9800000006\", \"price_min\": 20, \"price_max\": 60, \"quantity_or_complexity\": \"up to 30 kg/day\", \"description\": \"Organic seasonal vegetables sold directly, no flowers.\", \"tags\": [\"vegetables\", \"organic\", \"bulk\"]}, {\"id\": \"P015\", \"name\": \"Farhan Flower Traders (Farm Direct)\", \"category\": \"farmer\", \"location\": \"Devanahalli, Bengaluru Rural\", \"phone\": \"9800000015\", \"price_min\": 50, \"price_max\": 100, \"quantity_or_complexity\": \"up to 25 kg/day, advance booking discount\", \"description\": \"Marigold and rose farmer offering advance-booking discounts for festival buyers who order a day ahead, direct pickup from farm.\", \"tags\": [\"marigold\", \"rose\", \"flowers\", \"festival\", \"advance booking\", \"discount\"]}]}",
+    "response": "[\n  {\n    \"id\": \"P015\",\n    \"reason\": \"Provides marigold and rose with advance\u2011booking discounts for festival buyers who order a day ahead.\"\n  },\n  {\n    \"id\": \"P004\",\n    \"reason\": \"Grows marigold and offers best rates when bought a day in advance, suitable for a festival purchase.\"\n  },\n  {\n    \"id\": \"P005\",\n    \"reason\": \"Grows rose and offers delivery, though price rises sharply during festival week if not booked early.\"\n  }\n]"
+  },
+  {
+    "step": "verify_matches",
+    "checked": 3,
+    "passed": 3,
+    "issues": []
+  },
+  {
+    "step": "final_result",
+    "result": {
+      "category_detected": "farmer",
+      "parsed_requirement": {
+        "category": "farmer",
+        "budget_min": null,
+        "budget_max": null,
+        "need_summary": "2 kg of flowers (marigold or rose) for a festival tomorrow",
+        "quality_bar": "budget"
+      },
+      "results": [
+        {
+          "id": "P015",
+          "name": "Farhan Flower Traders (Farm Direct)",
+          "location": "Devanahalli, Bengaluru Rural",
+          "phone": "9800000015",
+          "price_min": 50,
+          "price_max": 100,
+          "reason": "Provides marigold and rose with advance\u2011booking discounts for festival buyers who order a day ahead."
+        },
+        {
+          "id": "P004",
+          "name": "Suresh Kumar Farms",
+          "location": "Doddaballapur Road, Bengaluru Rural",
+          "phone": "9800000004",
+          "price_min": 40,
+          "price_max": 90,
+          "reason": "Grows marigold and offers best rates when bought a day in advance, suitable for a festival purchase."
+        },
+        {
+          "id": "P005",
+          "name": "Green Valley Flower Farm",
+          "location": "Hoskote, Bengaluru Rural",
+          "phone": "9800000005",
+          "price_min": 60,
+          "price_max": 120,
+          "reason": "Grows rose and offers delivery, though price rises sharply during festival week if not booked early."
+        }
+      ],
+      "issues": []
+    }
+  }
+]

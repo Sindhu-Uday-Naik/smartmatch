@@ -1,0 +1,62 @@
+[
+  {
+    "step": "receive_query",
+    "query": "I want a lehenga that looks like a designer one I saw on Instagram but I can't afford a boutique. Budget around 3000 rupees.",
+    "timestamp": "2026-08-30T06:34:34.928850+00:00",
+    "mode": "real"
+  },
+  {
+    "step": "parse_query",
+    "mode": "real",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "system_prompt": "You are a requirement-extraction module for a producer-matching agent.\nGiven a consumer's plain-language request, extract structured JSON with these fields:\n- category: one of [\"tailor\", \"farmer\", \"developer\", \"mechanic\", \"tutor\"]\n- budget_min: number or null\n- budget_max: number or null\n- need_summary: short phrase describing what they actually need\n- quality_bar: one of [\"budget\", \"moderate\", \"premium\"] based on language used (e.g. \"designer\",\n  \"cheapest\", \"quality matters most\")\nRespond with ONLY the JSON object, no other text.",
+    "user_message": "I want a lehenga that looks like a designer one I saw on Instagram but I can't afford a boutique. Budget around 3000 rupees.",
+    "response": "{\n  \"category\": \"tailor\",\n  \"budget_min\": null,\n  \"budget_max\": 3000,\n  \"need_summary\": \"designer-style lehenga within 3000 rupees\",\n  \"quality_bar\": \"moderate\"\n}"
+  },
+  {
+    "step": "retrieve_candidates",
+    "category": "tailor",
+    "candidate_count": 5
+  },
+  {
+    "step": "rank_candidates",
+    "mode": "real",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "system_prompt": "You are a matching-reasoning module. You will be given a structured consumer\nrequirement and a list of candidate producers (as JSON). Select up to 3 producers that best fit,\nranked best first. For each, give a one-sentence reason that ONLY uses facts present in that\nproducer's record (price range, description, tags, quantity_or_complexity). Do not invent details.\n\nWeigh these, in order of importance:\n1. Specific requirements in need_summary (e.g. \"specialist\", \"premium\", \"quick\", a named skill\n   or material) \u2014 prefer producers whose description/tags explicitly match that specific need\n   over producers that only match the general category.\n2. Budget fit \u2014 if budget_max is given, prefer producers whose price range fits within it, and\n   explicitly exclude producers that are clearly outside the stated budget.\n3. Quality tier \u2014 match quality_bar to producers whose tags/description reflect that tier.\n\nIf the consumer names a specific type of specialist or a specific need that only some\nsame-category producers actually offer, do NOT default to the most general/broad producer just\nbecause it also technically fits the category.\n\nRespond with ONLY a JSON list like:\n[{\"id\": \"P001\", \"reason\": \"...\"}]",
+    "user_message": "{\"requirement\": {\"category\": \"tailor\", \"budget_min\": null, \"budget_max\": 3000, \"need_summary\": \"designer-style lehenga within 3000 rupees\", \"quality_bar\": \"moderate\"}, \"candidates\": [{\"id\": \"P001\", \"name\": \"Lakshmi Tailors\", \"category\": \"tailor\", \"location\": \"Basavanagudi, Bengaluru\", \"phone\": \"9800000001\", \"price_min\": 1200, \"price_max\": 3500, \"quantity_or_complexity\": \"1-3 pieces, 5-10 day turnaround\", \"description\": \"Specializes in custom designer-replica lehengas and party dresses using hand embroidery and mirror work. Can recreate a look from a reference photo.\", \"tags\": [\"lehenga\", \"designer replica\", \"embroidery\", \"party wear\", \"custom dress\"]}, {\"id\": \"P002\", \"name\": \"Ramesh Custom Stitching\", \"category\": \"tailor\", \"location\": \"Jayanagar, Bengaluru\", \"phone\": \"9800000002\", \"price_min\": 500, \"price_max\": 1500, \"quantity_or_complexity\": \"1-5 pieces, 3-7 day turnaround\", \"description\": \"Everyday alterations, blouses, and simple salwar suits. Budget-friendly, fast turnaround, no embroidery work.\", \"tags\": [\"blouse\", \"alteration\", \"salwar\", \"budget\", \"quick stitching\"]}, {\"id\": \"P003\", \"name\": \"Fatima Designer Studio\", \"category\": \"tailor\", \"location\": \"Frazer Town, Bengaluru\", \"phone\": \"9800000003\", \"price_min\": 2500, \"price_max\": 8000, \"quantity_or_complexity\": \"1-2 pieces, 10-15 day turnaround\", \"description\": \"High-end custom bridal and designer wear, sequin and zari work, works from Pinterest/Instagram reference images.\", \"tags\": [\"bridal\", \"designer replica\", \"sequin\", \"zari\", \"premium\"]}, {\"id\": \"P014\", \"name\": \"Divya Custom Blouses\", \"category\": \"tailor\", \"location\": \"Malleshwaram, Bengaluru\", \"phone\": \"9800000014\", \"price_min\": 700, \"price_max\": 2000, \"quantity_or_complexity\": \"1-4 pieces, 5-day turnaround\", \"description\": \"Focuses on designer blouse patterns replicated from photos, moderate pricing, some embroidery.\", \"tags\": [\"blouse\", \"designer replica\", \"embroidery\", \"moderate budget\"]}, {\"id\": \"P018\", \"name\": \"Ganesh Sarees & Dress Design\", \"category\": \"tailor\", \"location\": \"Chickpet, Bengaluru\", \"phone\": \"9800000018\", \"price_min\": 1000, \"price_max\": 4000, \"quantity_or_complexity\": \"1-3 pieces, 7-day turnaround\", \"description\": \"Recreates trending designer dress patterns from social media at mid-range prices, good for party wear on a budget.\", \"tags\": [\"designer replica\", \"party wear\", \"budget\", \"custom dress\", \"trending patterns\"]}]}",
+    "response": "[\n  {\n    \"id\": \"P001\",\n    \"reason\": \"Specializes in custom designer-replica lehengas and party dresses, with a price range of 1200\u20113500 rupees that can accommodate the \u22643000 rupee budget.\"\n  }\n]"
+  },
+  {
+    "step": "verify_matches",
+    "checked": 1,
+    "passed": 1,
+    "issues": []
+  },
+  {
+    "step": "final_result",
+    "result": {
+      "category_detected": "tailor",
+      "parsed_requirement": {
+        "category": "tailor",
+        "budget_min": null,
+        "budget_max": 3000,
+        "need_summary": "designer-style lehenga within 3000 rupees",
+        "quality_bar": "moderate"
+      },
+      "results": [
+        {
+          "id": "P001",
+          "name": "Lakshmi Tailors",
+          "location": "Basavanagudi, Bengaluru",
+          "phone": "9800000001",
+          "price_min": 1200,
+          "price_max": 3500,
+          "reason": "Specializes in custom designer-replica lehengas and party dresses, with a price range of 1200\u20113500 rupees that can accommodate the \u22643000 rupee budget."
+        }
+      ],
+      "issues": []
+    }
+  }
+]

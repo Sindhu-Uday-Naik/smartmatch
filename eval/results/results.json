@@ -1,0 +1,287 @@
+{
+  "baseline": {
+    "system": "Baseline (keyword matcher)",
+    "top3_hit_rate": 0.9,
+    "wrong_fit_rate": 0.0,
+    "n_queries": 10,
+    "rows": [
+      {
+        "query_id": "Q1",
+        "query": "I want a lehenga that looks like a designer one I saw on Instagram but I can't afford a boutique. Budget around 3000 rupees.",
+        "expected_category": "tailor",
+        "expected_ids": [
+          "P001",
+          "P018"
+        ],
+        "returned_ids": [
+          "P002",
+          "P014",
+          "P018"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q2",
+        "query": "Need 2 kg of flowers, ideally marigold or rose, for a festival tomorrow. Want the cheapest fair price, willing to go direct to a farm.",
+        "expected_category": "farmer",
+        "expected_ids": [
+          "P004",
+          "P015",
+          "P005"
+        ],
+        "returned_ids": [
+          "P006",
+          "P004",
+          "P015"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q3",
+        "query": "I'm a final year engineering student and need someone affordable to help build my major project, a simple web app, I'm not confident in coding.",
+        "expected_category": "developer",
+        "expected_ids": [
+          "P007",
+          "P009"
+        ],
+        "returned_ids": [
+          "P009",
+          "P007",
+          "P017"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q4",
+        "query": "My major project needs some machine learning component and I have a slightly higher budget, around 15000 rupees.",
+        "expected_category": "developer",
+        "expected_ids": [
+          "P017"
+        ],
+        "returned_ids": [
+          "P009",
+          "P007",
+          "P017"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q5",
+        "query": "My bike won't start, need a mechanic who does doorstep service, budget under 1000.",
+        "expected_category": "mechanic",
+        "expected_ids": [
+          "P010"
+        ],
+        "returned_ids": [
+          "P016",
+          "P011",
+          "P010"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q6",
+        "query": "Looking for a budget blouse stitched quickly, nothing fancy, just a plain blouse in 3 days.",
+        "expected_category": "tailor",
+        "expected_ids": [
+          "P002"
+        ],
+        "returned_ids": [
+          "P002",
+          "P014",
+          "P018"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q7",
+        "query": "I need my car's tyres and battery replaced, want a specialist not a general mechanic.",
+        "expected_category": "mechanic",
+        "expected_ids": [
+          "P011"
+        ],
+        "returned_ids": [
+          "P016",
+          "P011",
+          "P010"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q8",
+        "query": "Want a home tutor for my 8th grade daughter, maths and science, budget under 1500 a month.",
+        "expected_category": "tutor",
+        "expected_ids": [
+          "P012"
+        ],
+        "returned_ids": [
+          "P012",
+          "P013"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q9",
+        "query": "I want a bridal outfit with heavy zari and sequin work, budget is flexible, quality matters most.",
+        "expected_category": "tailor",
+        "expected_ids": [
+          "P003"
+        ],
+        "returned_ids": [
+          "P002",
+          "P014",
+          "P018"
+        ],
+        "hit": false
+      },
+      {
+        "query_id": "Q10",
+        "query": "Need someone to mentor me in Python and DSA for placement prep, I'm in college.",
+        "expected_category": "tutor",
+        "expected_ids": [
+          "P013"
+        ],
+        "returned_ids": [
+          "P012",
+          "P013"
+        ],
+        "hit": true
+      }
+    ]
+  },
+  "agent": {
+    "system": "SmartMatch Agent",
+    "top3_hit_rate": 1.0,
+    "wrong_fit_rate": 0.0,
+    "n_queries": 10,
+    "rows": [
+      {
+        "query_id": "Q1",
+        "query": "I want a lehenga that looks like a designer one I saw on Instagram but I can't afford a boutique. Budget around 3000 rupees.",
+        "expected_category": "tailor",
+        "expected_ids": [
+          "P001",
+          "P018"
+        ],
+        "returned_ids": [
+          "P001"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q2",
+        "query": "Need 2 kg of flowers, ideally marigold or rose, for a festival tomorrow. Want the cheapest fair price, willing to go direct to a farm.",
+        "expected_category": "farmer",
+        "expected_ids": [
+          "P004",
+          "P015",
+          "P005"
+        ],
+        "returned_ids": [
+          "P015",
+          "P004",
+          "P005"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q3",
+        "query": "I'm a final year engineering student and need someone affordable to help build my major project, a simple web app, I'm not confident in coding.",
+        "expected_category": "developer",
+        "expected_ids": [
+          "P007",
+          "P009"
+        ],
+        "returned_ids": [
+          "P007",
+          "P009"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q4",
+        "query": "My major project needs some machine learning component and I have a slightly higher budget, around 15000 rupees.",
+        "expected_category": "developer",
+        "expected_ids": [
+          "P017"
+        ],
+        "returned_ids": [
+          "P017"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q5",
+        "query": "My bike won't start, need a mechanic who does doorstep service, budget under 1000.",
+        "expected_category": "mechanic",
+        "expected_ids": [
+          "P010"
+        ],
+        "returned_ids": [
+          "P010"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q6",
+        "query": "Looking for a budget blouse stitched quickly, nothing fancy, just a plain blouse in 3 days.",
+        "expected_category": "tailor",
+        "expected_ids": [
+          "P002"
+        ],
+        "returned_ids": [
+          "P002"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q7",
+        "query": "I need my car's tyres and battery replaced, want a specialist not a general mechanic.",
+        "expected_category": "mechanic",
+        "expected_ids": [
+          "P011"
+        ],
+        "returned_ids": [
+          "P011"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q8",
+        "query": "Want a home tutor for my 8th grade daughter, maths and science, budget under 1500 a month.",
+        "expected_category": "tutor",
+        "expected_ids": [
+          "P012"
+        ],
+        "returned_ids": [
+          "P012"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q9",
+        "query": "I want a bridal outfit with heavy zari and sequin work, budget is flexible, quality matters most.",
+        "expected_category": "tailor",
+        "expected_ids": [
+          "P003"
+        ],
+        "returned_ids": [
+          "P003"
+        ],
+        "hit": true
+      },
+      {
+        "query_id": "Q10",
+        "query": "Need someone to mentor me in Python and DSA for placement prep, I'm in college.",
+        "expected_category": "tutor",
+        "expected_ids": [
+          "P013"
+        ],
+        "returned_ids": [
+          "P013"
+        ],
+        "hit": true
+      }
+    ]
+  }
+}

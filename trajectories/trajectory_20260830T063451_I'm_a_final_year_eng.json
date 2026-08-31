@@ -1,0 +1,71 @@
+[
+  {
+    "step": "receive_query",
+    "query": "I'm a final year engineering student and need someone affordable to help build my major project, a simple web app, I'm not confident in coding.",
+    "timestamp": "2026-08-30T06:34:46.751782+00:00",
+    "mode": "real"
+  },
+  {
+    "step": "parse_query",
+    "mode": "real",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "system_prompt": "You are a requirement-extraction module for a producer-matching agent.\nGiven a consumer's plain-language request, extract structured JSON with these fields:\n- category: one of [\"tailor\", \"farmer\", \"developer\", \"mechanic\", \"tutor\"]\n- budget_min: number or null\n- budget_max: number or null\n- need_summary: short phrase describing what they actually need\n- quality_bar: one of [\"budget\", \"moderate\", \"premium\"] based on language used (e.g. \"designer\",\n  \"cheapest\", \"quality matters most\")\nRespond with ONLY the JSON object, no other text.",
+    "user_message": "I'm a final year engineering student and need someone affordable to help build my major project, a simple web app, I'm not confident in coding.",
+    "response": "{\n  \"category\": \"developer\",\n  \"budget_min\": null,\n  \"budget_max\": null,\n  \"need_summary\": \"simple web app development assistance for major project\",\n  \"quality_bar\": \"budget\"\n}"
+  },
+  {
+    "step": "retrieve_candidates",
+    "category": "developer",
+    "candidate_count": 4
+  },
+  {
+    "step": "rank_candidates",
+    "mode": "real",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "system_prompt": "You are a matching-reasoning module. You will be given a structured consumer\nrequirement and a list of candidate producers (as JSON). Select up to 3 producers that best fit,\nranked best first. For each, give a one-sentence reason that ONLY uses facts present in that\nproducer's record (price range, description, tags, quantity_or_complexity). Do not invent details.\n\nWeigh these, in order of importance:\n1. Specific requirements in need_summary (e.g. \"specialist\", \"premium\", \"quick\", a named skill\n   or material) \u2014 prefer producers whose description/tags explicitly match that specific need\n   over producers that only match the general category.\n2. Budget fit \u2014 if budget_max is given, prefer producers whose price range fits within it, and\n   explicitly exclude producers that are clearly outside the stated budget.\n3. Quality tier \u2014 match quality_bar to producers whose tags/description reflect that tier.\n\nIf the consumer names a specific type of specialist or a specific need that only some\nsame-category producers actually offer, do NOT default to the most general/broad producer just\nbecause it also technically fits the category.\n\nRespond with ONLY a JSON list like:\n[{\"id\": \"P001\", \"reason\": \"...\"}]",
+    "user_message": "{\"requirement\": {\"category\": \"developer\", \"budget_min\": null, \"budget_max\": null, \"need_summary\": \"simple web app development assistance for major project\", \"quality_bar\": \"budget\"}, \"candidates\": [{\"id\": \"P007\", \"name\": \"Arjun Dev\", \"category\": \"developer\", \"location\": \"Remote / Koramangala, Bengaluru\", \"phone\": \"9800000007\", \"price_min\": 3000, \"price_max\": 12000, \"quantity_or_complexity\": \"low-medium complexity (student major projects, basic web/app apps)\", \"description\": \"Final-year CS student who builds academic major projects (web apps, basic ML demos) at student-friendly rates. 2-3 week delivery.\", \"tags\": [\"student project\", \"web app\", \"major project\", \"budget\", \"beginner friendly\"]}, {\"id\": \"P008\", \"name\": \"Priya Fullstack Solutions\", \"category\": \"developer\", \"location\": \"Remote\", \"phone\": \"9800000008\", \"price_min\": 15000, \"price_max\": 60000, \"quantity_or_complexity\": \"medium-high complexity (production apps, client startups)\", \"description\": \"Freelance full-stack developer for production-grade client apps and startup MVPs. Not aimed at student budgets.\", \"tags\": [\"production app\", \"startup MVP\", \"fullstack\", \"premium\"]}, {\"id\": \"P009\", \"name\": \"CodeCraft Interns\", \"category\": \"developer\", \"location\": \"Remote / Whitefield, Bengaluru\", \"phone\": \"9800000009\", \"price_min\": 2000, \"price_max\": 8000, \"quantity_or_complexity\": \"low complexity (mobile apps, simple CRUD, college mini/major projects)\", \"description\": \"Small group of engineering students who take up mini and major project builds (Android/Flutter/web) for juniors at affordable rates.\", \"tags\": [\"student project\", \"mobile app\", \"flutter\", \"mini project\", \"major project\", \"budget\"]}, {\"id\": \"P017\", \"name\": \"Aditi App Builders\", \"category\": \"developer\", \"location\": \"Remote / Electronic City, Bengaluru\", \"phone\": \"9800000017\", \"price_min\": 5000, \"price_max\": 20000, \"quantity_or_complexity\": \"medium complexity (final-year major projects with ML/AI components)\", \"description\": \"Small freelance team building final-year major projects that need ML or AI components, moderate pricing between student and professional rates.\", \"tags\": [\"major project\", \"machine learning\", \"AI project\", \"final year\", \"moderate budget\"]}]}",
+    "response": "[\n  {\n    \"id\": \"P007\",\n    \"reason\": \"Matches the simple web app major project need with budget-friendly rates (price 3000\u201112000), low\u2011medium complexity, and tags include web app, major project, budget.\"\n  },\n  {\n    \"id\": \"P009\",\n    \"reason\": \"Offers affordable major project builds, including simple web apps, at low complexity with price 2000\u20118000 and budget tags.\"\n  }\n]"
+  },
+  {
+    "step": "verify_matches",
+    "checked": 2,
+    "passed": 2,
+    "issues": []
+  },
+  {
+    "step": "final_result",
+    "result": {
+      "category_detected": "developer",
+      "parsed_requirement": {
+        "category": "developer",
+        "budget_min": null,
+        "budget_max": null,
+        "need_summary": "simple web app development assistance for major project",
+        "quality_bar": "budget"
+      },
+      "results": [
+        {
+          "id": "P007",
+          "name": "Arjun Dev",
+          "location": "Remote / Koramangala, Bengaluru",
+          "phone": "9800000007",
+          "price_min": 3000,
+          "price_max": 12000,
+          "reason": "Matches the simple web app major project need with budget-friendly rates (price 3000\u201112000), low\u2011medium complexity, and tags include web app, major project, budget."
+        },
+        {
+          "id": "P009",
+          "name": "CodeCraft Interns",
+          "location": "Remote / Whitefield, Bengaluru",
+          "phone": "9800000009",
+          "price_min": 2000,
+          "price_max": 8000,
+          "reason": "Offers affordable major project builds, including simple web apps, at low complexity with price 2000\u20118000 and budget tags."
+        }
+      ],
+      "issues": []
+    }
+  }
+]
