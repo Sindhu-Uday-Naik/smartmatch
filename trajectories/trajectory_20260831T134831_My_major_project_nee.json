@@ -2,7 +2,7 @@
   {
     "step": "receive_query",
     "query": "My major project needs some machine learning component and I have a slightly higher budget, around 15000 rupees.",
-    "timestamp": "2026-08-30T06:34:51.707698+00:00",
+    "timestamp": "2026-08-31T13:48:19.130704+00:00",
     "mode": "real"
   },
   {
@@ -26,12 +26,12 @@
     "model": "openai/gpt-oss-120b",
     "system_prompt": "You are a matching-reasoning module. You will be given a structured consumer\nrequirement and a list of candidate producers (as JSON). Select up to 3 producers that best fit,\nranked best first. For each, give a one-sentence reason that ONLY uses facts present in that\nproducer's record (price range, description, tags, quantity_or_complexity). Do not invent details.\n\nWeigh these, in order of importance:\n1. Specific requirements in need_summary (e.g. \"specialist\", \"premium\", \"quick\", a named skill\n   or material) \u2014 prefer producers whose description/tags explicitly match that specific need\n   over producers that only match the general category.\n2. Budget fit \u2014 if budget_max is given, prefer producers whose price range fits within it, and\n   explicitly exclude producers that are clearly outside the stated budget.\n3. Quality tier \u2014 match quality_bar to producers whose tags/description reflect that tier.\n\nIf the consumer names a specific type of specialist or a specific need that only some\nsame-category producers actually offer, do NOT default to the most general/broad producer just\nbecause it also technically fits the category.\n\nRespond with ONLY a JSON list like:\n[{\"id\": \"P001\", \"reason\": \"...\"}]",
     "user_message": "{\"requirement\": {\"category\": \"developer\", \"budget_min\": 15000, \"budget_max\": 15000, \"need_summary\": \"machine learning component for major project\", \"quality_bar\": \"moderate\"}, \"candidates\": [{\"id\": \"P007\", \"name\": \"Arjun Dev\", \"category\": \"developer\", \"location\": \"Remote / Koramangala, Bengaluru\", \"phone\": \"9800000007\", \"price_min\": 3000, \"price_max\": 12000, \"quantity_or_complexity\": \"low-medium complexity (student major projects, basic web/app apps)\", \"description\": \"Final-year CS student who builds academic major projects (web apps, basic ML demos) at student-friendly rates. 2-3 week delivery.\", \"tags\": [\"student project\", \"web app\", \"major project\", \"budget\", \"beginner friendly\"]}, {\"id\": \"P008\", \"name\": \"Priya Fullstack Solutions\", \"category\": \"developer\", \"location\": \"Remote\", \"phone\": \"9800000008\", \"price_min\": 15000, \"price_max\": 60000, \"quantity_or_complexity\": \"medium-high complexity (production apps, client startups)\", \"description\": \"Freelance full-stack developer for production-grade client apps and startup MVPs. Not aimed at student budgets.\", \"tags\": [\"production app\", \"startup MVP\", \"fullstack\", \"premium\"]}, {\"id\": \"P009\", \"name\": \"CodeCraft Interns\", \"category\": \"developer\", \"location\": \"Remote / Whitefield, Bengaluru\", \"phone\": \"9800000009\", \"price_min\": 2000, \"price_max\": 8000, \"quantity_or_complexity\": \"low complexity (mobile apps, simple CRUD, college mini/major projects)\", \"description\": \"Small group of engineering students who take up mini and major project builds (Android/Flutter/web) for juniors at affordable rates.\", \"tags\": [\"student project\", \"mobile app\", \"flutter\", \"mini project\", \"major project\", \"budget\"]}, {\"id\": \"P017\", \"name\": \"Aditi App Builders\", \"category\": \"developer\", \"location\": \"Remote / Electronic City, Bengaluru\", \"phone\": \"9800000017\", \"price_min\": 5000, \"price_max\": 20000, \"quantity_or_complexity\": \"medium complexity (final-year major projects with ML/AI components)\", \"description\": \"Small freelance team building final-year major projects that need ML or AI components, moderate pricing between student and professional rates.\", \"tags\": [\"major project\", \"machine learning\", \"AI project\", \"final year\", \"moderate budget\"]}]}",
-    "response": "[{\"id\": \"P017\", \"reason\": \"P017 provides medium\u2011complexity major projects with machine learning components and a price range of 5,000\u201120,000 that includes the required 15,000 budget.\"}]"
+    "response": "[\n  {\n    \"id\": \"P017\",\n    \"reason\": \"price range 5000\u201120000 includes the exact 15000 budget, description notes building major projects with ML/AI components, and tags contain 'machine learning'.\"\n  },\n  {\n    \"id\": \"P008\",\n    \"reason\": \"price range 15000\u201160000 includes the 15000 budget, description offers production\u2011grade full\u2011stack development, and tags list 'premium' and 'fullstack' though no ML tag.\"\n  }\n]"
   },
   {
     "step": "verify_matches",
-    "checked": 1,
-    "passed": 1,
+    "checked": 2,
+    "passed": 2,
     "issues": []
   },
   {
@@ -53,7 +53,16 @@
           "phone": "9800000017",
           "price_min": 5000,
           "price_max": 20000,
-          "reason": "P017 provides medium\u2011complexity major projects with machine learning components and a price range of 5,000\u201120,000 that includes the required 15,000 budget."
+          "reason": "price range 5000\u201120000 includes the exact 15000 budget, description notes building major projects with ML/AI components, and tags contain 'machine learning'."
+        },
+        {
+          "id": "P008",
+          "name": "Priya Fullstack Solutions",
+          "location": "Remote",
+          "phone": "9800000008",
+          "price_min": 15000,
+          "price_max": 60000,
+          "reason": "price range 15000\u201160000 includes the 15000 budget, description offers production\u2011grade full\u2011stack development, and tags list 'premium' and 'fullstack' though no ML tag."
         }
       ],
       "issues": []
